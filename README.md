@@ -2,6 +2,24 @@
 
 End-to-end credit card fraud detection: a PySpark medallion pipeline (bronze, silver, gold), a PostgreSQL warehouse, a gradient boosting model, a live transaction stream that gets scored in real time, a FastAPI service with a plain HTML/CSS dashboard, and a feedback loop that retrains the model from analyst labels and chargebacks.
 
+## Screenshots
+
+**Live**: transactions streaming in, scored and flagged in real time, with filters for time window, decision, category, state and amount
+
+![Live tab](docs/screenshots/live.png)
+
+**Review**: flagged transactions waiting for an analyst to mark them as fraud or legit
+
+![Review tab](docs/screenshots/review.png)
+
+**History**: fraud patterns in the historical training data
+
+![History tab](docs/screenshots/history.png)
+
+**Model**: the production model, live precision and recall from feedback, and every retrain with whether it was promoted
+
+![Model tab](docs/screenshots/model.png)
+
 ## Dataset
 
 [Sparkov credit card transactions](https://www.kaggle.com/datasets/kartik2112/fraud-detection), a simulated dataset of card transactions from 952 customers across 700 merchants, downloaded from a [Hugging Face mirror](https://huggingface.co/SquareBracket/fraud_detection) so no Kaggle login is needed.
