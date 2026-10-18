@@ -2,6 +2,8 @@
 
 End-to-end credit card fraud detection: a PySpark medallion pipeline (bronze, silver, gold), a PostgreSQL warehouse, a gradient boosting model, a live transaction stream that gets scored in real time, a FastAPI service with a plain HTML/CSS dashboard, and a feedback loop that retrains the model from analyst labels and chargebacks.
 
+New to this? Read **[How it works, in plain English](docs/how-it-works.md)**.
+
 ## Screenshots
 
 **Live**: transactions streaming in, scored and flagged in real time, with filters for time window, decision, category, state and amount
