@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fraud Detection Dashboard</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h2>Filters</h2>
+    <div class="group">
+      <span class="label">Time window</span>
+      <div class="buttons" data-filter="minutes">
+        <button data-value="5">5 min</button>
+        <button data-value="15" class="active">15 min</button>
+        <button data-value="60">1 hour</button>
+        <button data-value="">All</button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="label">Decision</span>
+      <div class="buttons" data-filter="decision">
+        <button data-value="" class="active">All</button>
+        <button data-value="approved">Approved</button>
+        <button data-value="flagged">Flagged</button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="label">Category</span>
+      <div class="buttons" id="categories"></div>
+    </div>
+    <div class="group">
+      <label class="label" for="state">State</label>
+      <select id="state"><option value="">All states</option></select>
+    </div>
+    <div class="group">
+      <span class="label">Amount ($)</span>
+      <div class="amount">
+        <input id="min-amount" type="number" min="0" step="10" placeholder="Min" aria-label="Minimum amount">
+        <input id="max-amount" type="number" min="0" step="10" placeholder="Max" aria-label="Maximum amount">
+      </div>
+    </div>
+    <button id="reset">Reset filters</button>
+  </aside>
+
+  <main>
+    <h1>Fraud Detection Dashboard</h1>
+    <nav class="tabs">
+      <button data-tab="live" class="active">Live</button>
+      <button data-tab="review">Review</button>
+      <button data-tab="history">History</button>
+      <button data-tab="model">Model</button>
+    </nav>
+    <p id="error" class="error" hidden></p>
+
+    <section id="live" class="tab">
+      <p id="live-status"></p>
+      <div class="kpis" id="live-kpis"></div>
+      <div class="row">
+        <div><h3>Transactions in <span class="bucket"></span></h3><div id="live-in" class="chart"></div></div>
+        <div><h3>Flagged <span class="bucket"></span></h3><div id="live-out" class="chart"></div></div>
+      </div>
+      <h3>Latest transactions</h3>
+      <div id="live-feed" class="table-wrap"></div>
+      <div class="row">
+        <div><h3>Flagged by category</h3><div id="live-categories"></div></div>
+        <div><h3>Merchants with most flags</h3><div id="live-merchants" class="table-wrap"></div></div>
+      </div>
+    </section>
+
+    <section id="review" class="tab" hidden>
+      <p><span id="review-count"></span> <button id="review-refresh">Refresh</button></p>
+      <div id="review-queue" class="table-wrap tall"></div>
+    </section>
+
+    <section id="history" class="tab" hidden>
+      <div class="kpis" id="history-kpis"></div>
+      <div class="row">
+        <div><h3>Fraud rate by hour</h3><div id="history-hour" class="chart"></div></div>
+        <div><h3>Fraud rate by amount</h3><div id="history-band"></div></div>
+      </div>
+      <div class="row">
+        <div><h3>Frauds per month</h3><div id="history-month" class="chart"></div></div>
+        <div><h3>Fraud rate by category</h3><div id="history-category"></div></div>
+      </div>
+      <div class="row">
+        <div><h3>Fraud rate by state</h3><div id="history-state" class="table-wrap"></div></div>
+        <div><h3>Top occupations by frauds</h3><div id="history-jobs" class="table-wrap"></div></div>
+      </div>
+    </section>
+
+    <section id="model" class="tab" hidden>
+      <div class="kpis" id="model-kpis"></div>
+      <p id="model-confusion"></p>
+      <p><button id="retrain">Retrain model with feedback</button> <span id="retrain-result"></span></p>
+      <h3>PR-AUC by version</h3>
+      <div id="model-chart" class="chart"></div>
+      <h3>Model versions</h3>
+      <div id="model-versions" class="table-wrap"></div>
+    </section>
+  </main>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>

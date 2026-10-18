@@ -4,14 +4,18 @@ from typing import Literal
 import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from sqlalchemy import text
 
+from fraud import web
 from fraud.config import MODELS
 from fraud.db import engine
 from fraud.model import active_version, score
 
 app = FastAPI(title="Fraud Detection API")
+app.include_router(web.router)
+app.mount("/static", StaticFiles(directory=web.STATIC), name="static")
 
 DIMENSIONS = {
     "category": "t.category",

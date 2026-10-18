@@ -1,0 +1,283 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: #222;
+  background: #fff;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+aside {
+  background: #f3f4f6;
+  border-right: 1px solid #ddd;
+  padding: 16px;
+}
+
+aside h2 {
+  font-size: 18px;
+  margin: 0 0 16px;
+}
+
+.group {
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+button {
+  font: inherit;
+  padding: 4px 10px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #eee;
+}
+
+button.active {
+  background: #1f77b4;
+  border-color: #1f77b4;
+  color: #fff;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+select,
+input {
+  font: inherit;
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.amount {
+  display: flex;
+  gap: 6px;
+}
+
+main {
+  padding: 16px 24px 40px;
+}
+
+h1 {
+  font-size: 26px;
+  margin: 0 0 12px;
+}
+
+h3 {
+  font-size: 15px;
+  margin: 20px 0 8px;
+}
+
+h3 .bucket {
+  font-weight: normal;
+  color: #666;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 12px;
+}
+
+.tabs button {
+  border-color: transparent;
+  border-radius: 3px 3px 0 0;
+  margin-bottom: -1px;
+}
+
+.tabs button.active {
+  background: #fff;
+  color: #222;
+  border-color: #ccc #ccc #fff;
+  font-weight: 600;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.kpi {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 10px 12px;
+}
+
+.kpi .label {
+  font-weight: normal;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.kpi .value {
+  font-size: 22px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.chart {
+  max-width: 760px;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart text {
+  font-size: 11px;
+  fill: #666;
+}
+
+.chart .grid {
+  stroke: #e5e5e5;
+}
+
+.legend {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+
+.hbar {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) 64px;
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.hbar .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track {
+  display: block;
+  height: 14px;
+  background: #eee;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-wrap {
+  max-height: 380px;
+  overflow: auto;
+  border: 1px solid #ddd;
+}
+
+.table-wrap.tall {
+  max-height: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th,
+td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background: #f7f7f7;
+  font-weight: 600;
+}
+
+th.num,
+td.num {
+  text-align: right;
+}
+
+.flagged {
+  color: #d62728;
+  font-weight: 600;
+}
+
+.empty {
+  color: #888;
+}
+
+.error {
+  background: #fdecea;
+  color: #a61b1b;
+  border: 1px solid #f5c2c0;
+  padding: 8px 12px;
+}
+
+@media (max-width: 900px) {
+  .layout,
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  aside {
+    border-right: 0;
+    border-bottom: 1px solid #ddd;
+  }
+}

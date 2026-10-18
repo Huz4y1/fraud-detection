@@ -1,6 +1,6 @@
 # Fraud Detection Pipeline
 
-End-to-end credit card fraud detection: a PySpark medallion pipeline (bronze, silver, gold), a PostgreSQL warehouse, a gradient boosting model, a live transaction stream that gets scored in real time, a Streamlit dashboard, a FastAPI service, and a feedback loop that retrains the model from analyst labels and chargebacks.
+End-to-end credit card fraud detection: a PySpark medallion pipeline (bronze, silver, gold), a PostgreSQL warehouse, a gradient boosting model, a live transaction stream that gets scored in real time, a FastAPI service with a plain HTML/CSS dashboard, and a feedback loop that retrains the model from analyst labels and chargebacks.
 
 ## Dataset
 
@@ -27,9 +27,9 @@ flowchart LR
     REG --> ST
     ST -->|scored transactions| PG
     ST -->|delayed chargebacks| PG
-    PG --> DASH[Streamlit dashboard]
     PG --> API[FastAPI]
-    DASH -->|analyst labels| PG
+    API --> DASH[HTML/CSS dashboard]
+    DASH -->|analyst labels| API
     PG --> FB[feedback retrain]
     FB -->|promote if better| REG
 ```
@@ -73,18 +73,20 @@ Replays the stream split in time order at a fixed rate, scores every transaction
 3. Challenger and champion are both scored on the most recent 30% of labeled live traffic.
 4. The challenger is promoted only if its PR-AUC is higher. Every attempt is recorded in `model_versions`.
 
-### Dashboard (`fraud/dashboard.py`)
+### Dashboard (`fraud/static/`, `fraud/web.py`)
 
-- **Live**: transactions in vs flagged, refreshing every 2 seconds, latest transactions, flags by category, map of flagged transactions, riskiest merchants
-- **Review**: queue of flagged transactions with Fraud / Legit buttons that write to the feedback table
+Plain HTML, CSS and JavaScript with no frontend framework or chart library, served by the FastAPI app at `/`. Charts are drawn as SVG and CSS bars. The page fetches JSON from the `/dashboard/*` endpoints in `fraud/web.py`, which run the SQLAlchemy queries in `fraud/queries.py` (filters and joins across transactions, customers, merchants and feedback).
+
+- **Live**: KPIs, transactions in vs flagged over time, latest transactions, flags by category, riskiest merchants. Refreshes every 2 seconds.
+- **Review**: queue of flagged transactions with Fraud / Legit buttons that call `POST /feedback`
 - **History**: fraud rate by hour, amount, category, month, state and occupation
 - **Model**: production model metrics, live precision and recall from feedback, version history and a retrain button
 
-Sidebar filters (time window, decision, category, state, amount) apply to every query. All dashboard queries are built with SQLAlchemy Core with joins across transactions, customers, merchants and feedback (`fraud/queries.py`).
+Sidebar filters (time window, decision, category, state, amount) are sent as query parameters on every request.
 
 ### API (`fraud/api.py`)
 
-FastAPI service where every endpoint runs raw SQL through `sqlalchemy.text()` with bound parameters. Docs at `/docs`.
+The REST endpoints below run raw SQL through `sqlalchemy.text()` with bound parameters. Docs at `/docs`.
 
 | Method | Path | Description |
 |---|---|---|
@@ -98,6 +100,8 @@ FastAPI service where every endpoint runs raw SQL through `sqlalchemy.text()` wi
 | GET | `/models` | model registry |
 | POST | `/feedback` | label a live transaction as fraud or legit |
 | POST | `/score` | score a transaction with the production model |
+
+The dashboard uses its own endpoints: `GET /dashboard/options`, `/dashboard/live`, `/dashboard/review`, `/dashboard/history`, `/dashboard/model` and `POST /dashboard/retrain`.
 
 ```bash
 curl -X POST localhost:8000/score -H "Content-Type: application/json" \
@@ -121,11 +125,12 @@ python -m fraud.pipeline             # download, bronze/silver/gold, load Postgr
 Then in separate terminals:
 
 ```bash
-python -m fraud.stream                         # live transactions
-python -m streamlit run fraud/dashboard.py     # dashboard on localhost:8501
-uvicorn fraud.api:app --reload                 # API on localhost:8000
-python -m fraud.feedback --every 600           # retrain every 10 minutes
+python -m fraud.stream                 # live transactions
+uvicorn fraud.api:app                  # dashboard on localhost:8000, API docs on localhost:8000/docs
+python -m fraud.feedback --every 600   # optional: retrain every 10 minutes
 ```
+
+Add `--port 8001` to the uvicorn command if port 8000 is taken.
 
 Each pipeline step can also be run on its own: `fraud.download`, `fraud.medallion`, `fraud.warehouse`, `fraud.model`.
 
