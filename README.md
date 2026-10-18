@@ -117,7 +117,7 @@ python -m venv .venv
 source .venv/bin/activate            # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-docker compose up -d                 # or set DATABASE_URL to your own Postgres
+export DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/fraud
 
 python -m fraud.pipeline             # download, bronze/silver/gold, load Postgres, train model v1
 ```
