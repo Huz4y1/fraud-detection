@@ -228,6 +228,15 @@ h3 .bucket {
   max-height: none;
 }
 
+.table-wrap.tall th,
+.table-wrap.tall td {
+  white-space: normal;
+}
+
+.table-wrap.tall td:last-child {
+  white-space: nowrap;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

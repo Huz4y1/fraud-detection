@@ -17,6 +17,14 @@ app = FastAPI(title="Fraud Detection API")
 app.include_router(web.router)
 app.mount("/static", StaticFiles(directory=web.STATIC), name="static")
 
+
+@app.middleware("http")
+async def revalidate_dashboard_files(request, call_next):
+    response = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
 DIMENSIONS = {
     "category": "t.category",
     "state": "c.state",
